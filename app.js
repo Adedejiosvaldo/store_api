@@ -1,10 +1,30 @@
-const express = require("express");
 require("dotenv").config();
+const express = require("express");
+const notFound = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
+const conenctDB = require("./db/connect");
 const app = express();
 const port = 3000;
 
-app.get("/", (req, res) => res.send("Hello World!"));
+// middleware
+app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send('<h1>Store Apo</h1><a href="/api/v1/products">Products</a>');
+});
 
+app.use(notFound);
+app.use(errorHandlerMiddleware);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+const start = async () => {
+  try {
+    await conenctDB(process.env.MONGO_URI);
+    app.listen(port, () => {
+      console.log("RUnning");
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
