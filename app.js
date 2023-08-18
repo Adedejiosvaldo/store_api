@@ -6,7 +6,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const conenctDB = require("./db/connect");
 const storeRoutes = require("./routes/store");
 const app = express();
-const port = 3000;
+const port = 5000;
 
 // middleware
 app.use(express.json());
