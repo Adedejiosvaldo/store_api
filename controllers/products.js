@@ -7,7 +7,7 @@ const getAllProductsStatic = async (req, res) => {
 };
 
 const getAllProducts = async (req, res) => {
-  const { featured, company, name, sort, select, limit } = req.query;
+  const { featured, company, name, sort, select } = req.query;
   const queryOBject = {};
 
   if (featured) {
@@ -36,9 +36,15 @@ const getAllProducts = async (req, res) => {
     const selectList = select.split(",").join(" ");
     result = result.select(selectList);
   }
-  if (limit) {
-    result = result.limit(limit);
-  }
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) | 10;
+
+  const skip = (page - 1) * limit;
+
+  result = result.skip(skip).limit(limit);
+  //   if (limit) {
+  //     result = result.limit(limit);
+  //   }
 
   const products = await result;
   res.status(200).json({ nbHits: products.length, products });
